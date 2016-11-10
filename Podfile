@@ -4,5 +4,6 @@ target 'NYTimesBestSellers' do
   use_frameworks!
 
   # Pods for NYTimesBestSellers
-    pod 'AFNetworking', '~> 3.0'
+    pod 'Alamofire', '~> 4.0'
+    pod 'SwiftyJSON'
 end
