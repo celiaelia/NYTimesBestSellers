@@ -23,6 +23,6 @@ extension Book {
     @NSManaged public var rank: Int32
     @NSManaged public var weeksBestSeller: Int32
     @NSManaged public var coverImagePath: String?
-    @NSManaged public var category: Category?
+    @NSManaged public var category: Category
 
 }

@@ -11,7 +11,19 @@ import Alamofire
 import SwiftyJSON
 
 class APIManager {
-     private let kBaseURL = "https://api.nytimes.com/svc/books/v3"
+    //MARK: - Shared Instance
+    
+    static let sharedInstance = APIManager()
+    
+    //MARK: - Init
+    
+    private init() {}
+    
+    //MARK: - Properties
+    
+    private let kBaseURL = "https://api.nytimes.com/svc/books/v3"
+    
+    //MARK: - API Methods
     
      func fetchAllBookCategories(completion: @escaping (_ result: Bool) -> Void) {
         Alamofire.request(kBaseURL + "/lists/names.json")
@@ -25,7 +37,7 @@ class APIManager {
                         let displayName = category["display_name"].stringValue
                         let updated = category["updated"].stringValue
                         
-                        ModelManager().saveBookCategory(name: name, displayName: displayName, updated: updated)
+                        ModelManager.sharedInstance.saveBookCategory(name: name, displayName: displayName, updated: updated)
                     }
                     completion(true)
                 }
@@ -40,6 +52,7 @@ class APIManager {
             .responseJSON { (response) in
                 if response.result.isSuccess, let data = response.data {
                     let json = JSON(data: data)
+                    let category = ModelManager.sharedInstance.fetchCategoryWithName(name: categoryName)
                     
                     for (_, book) in json["results"] {
                         let title = book["book_details"][0]["title"].stringValue
@@ -50,7 +63,7 @@ class APIManager {
                         let rank = book["rank"].int32
                         let weeksBestSeller = book["weeks_on_list"].int32
                        
-                        ModelManager().saveBook(title: title, author: author, summary: summary, amazonLink: amazonLink, reviewLink: reviewLink, rank: rank!, weeksBestSeller: weeksBestSeller!, category: categoryName)
+                        ModelManager.sharedInstance.saveBook(title: title, author: author, summary: summary, amazonLink: amazonLink, reviewLink: reviewLink, rank: rank!, weeksBestSeller: weeksBestSeller!, category: category!)
                     }
                     completion(true)
                 }
